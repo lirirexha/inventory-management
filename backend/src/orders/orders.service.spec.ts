@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { OrdersService } from './orders.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConflictException } from '@nestjs/common';
 
 describe('OrdersService', () => {
   let service: OrdersService;
@@ -80,5 +81,45 @@ describe('OrdersService', () => {
 
     expect(tx.order.create).toHaveBeenCalled();
     expect(result.id).toBe(1);
+  });
+
+  it('throws ConflictException when stock is not enough', async () => {
+    const product = {
+      id: 1,
+      name: 'Keyboard',
+      price: new Prisma.Decimal(50),
+      stockQuantity: 1,
+    };
+
+    const tx = {
+      product: {
+        findUnique: jest.fn().mockResolvedValue(product),
+        updateMany: jest.fn().mockResolvedValue({ count: 0 }),
+      },
+      order: {
+        create: jest.fn(),
+      },
+    };
+
+    type MockTransactionClient = typeof tx;
+
+    mockPrisma.$transaction.mockImplementation(
+      async <T>(callback: (tx: MockTransactionClient) => Promise<T>) => {
+        return callback(tx);
+      },
+    );
+
+    await expect(
+      service.create({
+        items: [
+          {
+            productId: 1,
+            quantity: 5,
+          },
+        ],
+      }),
+    ).rejects.toThrow(ConflictException);
+
+    expect(tx.order.create).not.toHaveBeenCalled();
   });
 });
