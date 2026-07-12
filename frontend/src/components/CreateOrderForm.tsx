@@ -14,7 +14,7 @@ export function CreateOrderForm({
   onOrderCreated,
   onProductsChanged,
 }: CreateOrderFormProps) {
-  const [productId, setProductId] = useState(null)
+  const [productId, setProductId] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [items, setItems] = useState<SelectedItem[]>([])
   const [error, setError] = useState("")
@@ -51,7 +51,6 @@ export function CreateOrderForm({
       },
     ]);
 
-    setProductId(null)
     setQuantity(1)
   }
 
@@ -78,6 +77,7 @@ export function CreateOrderForm({
       onOrderCreated(response.data);
       onProductsChanged();
       setItems([]);
+      setProductId(0);
       setQuantity(1);
     } catch {
       setError("Something went wrong while creating the order.")
