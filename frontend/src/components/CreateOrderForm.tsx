@@ -78,14 +78,9 @@ export function CreateOrderForm({
       onOrderCreated(response.data);
       onProductsChanged();
       setItems([]);
-      setProductId(null);
       setQuantity(1);
-    } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        "Something went wrong while creating the order.";
-
-      setError(Array.isArray(message) ? message.join(", ") : message);
+    } catch {
+      setError("Something went wrong while creating the order.")
     }
   }
 
@@ -99,10 +94,10 @@ export function CreateOrderForm({
         <div>
           <p>Product </p>
           <select
-            value={productId}
-            onChange={(event) => setProductId(event.target.value)}
+            value={productId ?? 0} 
+            onChange={(event) => setProductId(Number(event.target.value))}
           >
-            <option value="">Select product</option>
+            <option value={0}>Select product</option>
 
             {products.map((product) => (
               <option
