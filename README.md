@@ -12,9 +12,8 @@ The app allows users to view products, create orders with one or more products, 
 - TypeScript
 
 ### Backend
-- Node.js
-- NestJS
 - TypeScript
+- Node.js (NestJS)
 - Prisma ORM
 
 ### Database
@@ -67,7 +66,7 @@ To run this project for the first time, you need:
 - Docker Compose
 - Git
 
-If using Docker, you do not need to install PostgreSQL locally because the database runs inside a Docker container.
+you do not need to install PostgreSQL locally because the database runs inside a Docker container.
 
 ## running the project for the first time
 
