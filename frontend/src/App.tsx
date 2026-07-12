@@ -28,19 +28,22 @@ function App() {
 
   return (
     <>
-      <header>
+      <header className="topbar">
+        <div className="brand">
+          Product Inventory & Orders Management
+        </div>
       </header>
-      <main>
+      <main className="mainSection">
         {!products.length ? (
           <>
-            <button onClick={fetchProducts} disabled={loading}>
+            <button className="create-order-btn" onClick={fetchProducts} disabled={loading}>
               {loading ? "Loading..." : "Create Order"}
             </button>
           </>
         ) : (
           <>
-            {error && <p>{error}</p>}
-            <div>
+            {error && <p className="error">{error}</p>}
+            <div className="mainLayout">
             <ProductList products={products} />
             <CreateOrderForm
               products={products}
@@ -52,7 +55,7 @@ function App() {
         )}
 
         {lastOrder && (
-          <div>
+          <div className="lastOrder">
             <h2>Order Confirmation</h2>
             <p>Order #{lastOrder.id} created successfully.</p>
             <p>Total: {lastOrder.total}</p>
