@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api/client";
 import type { Order, SelectedItem } from "../types/order";
 import type { Product } from "../types/product";
+import "./style.css";
 
 interface CreateOrderFormProps {
   products: Product[];
@@ -23,12 +24,12 @@ export function CreateOrderForm({
     setError("");
 
     if (!productId) {
-      setError("TEST")
+      setError("Please select a product")
       return;
     }
 
     if (quantity < 1) {
-      setError("TESTTTTTTTTTTTT")
+      setError("Quantity must be at least 1")
       return;
     }
 
@@ -81,6 +82,7 @@ export function CreateOrderForm({
       setQuantity(1);
     } catch {
       setError("Something went wrong while creating the order.")
+      setItems([])
     }
   }
 
@@ -89,9 +91,13 @@ export function CreateOrderForm({
   }
 
   return (
-    <div>
+    <div className="createOrderPanel">
+      <div className="card-header">
+        <h2>Create Order</h2>
+        <p className="createOrderDescription">Choose a product and quantity</p>
+      </div>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="field">
           <p>Product </p>
           <select
             value={productId ?? 0} 
@@ -111,7 +117,7 @@ export function CreateOrderForm({
           </select>
         </div>
 
-        <div>
+        <div className="field">
           <p>Quantity </p>
           <input
             id="quantity-value"
@@ -123,14 +129,15 @@ export function CreateOrderForm({
         </div>
 
         {items.length > 0 && (
-          <div>
+          <div className="summary">
             <ul>
               {items.map((item) => (
-                <li key={item.productId}>
+                <li key={item.productId} className="summary-row">
                   {getProductName(item.productId)} * {item.quantity}
                   <button
                     type="button"
                     onClick={() => handleRemoveItem(item.productId)}
+                    className="remove-item-btn"
                   >
                     x
                   </button>
@@ -140,15 +147,15 @@ export function CreateOrderForm({
           </div>
         )}
 
-        <div>
-          <button type="button" onClick={handleAddItem}>
+        <div className="card-footer">
+          <button className="add-product-btn" type="button" onClick={handleAddItem}>
             Add Product
           </button>
-          <button type="submit">Place Order</button>
+          <button className="submit-btn" type="submit">Place Order</button>
         </div>
       </form>
 
-      {error && <p>{error}</p>}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 }
